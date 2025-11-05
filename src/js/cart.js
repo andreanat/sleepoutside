@@ -1,19 +1,14 @@
-import { setLocalStorage, getLocalStorage } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import { getLocalStorage } from "./utils.mjs";
 
-const dataSource = new ProductData("tents");
-
-function addProductToCart(product) {
+function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
-  cartItems.push(product);
-  setLocalStorage("so-cart", cartItems);
+  const parent = document.querySelector(".product-list");
+
+  if (!parent) return;
+
+  parent.innerHTML = cartItems
+    .map((item) => `<li class="cart-card">${item.Name} - $${item.FinalPrice}</li>`)
+    .join("");
 }
 
-async function addToCartHandler(e) {
-  const product = await dataSource.findProductById(e.target.dataset.id);
-  addProductToCart(product);
-}
-
-document
-  .getElementById("addToCart")
-  .addEventListener("click", addToCartHandler);
+renderCartContents();
