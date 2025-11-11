@@ -11,9 +11,28 @@ export function setLocalStorage(key, data) {
 }
 
 export function setClick(selector, callback) {
-  qs(selector).addEventListener("touchend", (event) => {
+  const element = qs(selector);
+  if (!element) return;
+  element.addEventListener("touchend", (event) => {
     event.preventDefault();
-    callback();
+    callback(event);
   });
-  qs(selector).addEventListener("click", callback);
+  element.addEventListener("click", callback);
+}
+
+export function renderListWithTemplate(
+  templateFn,
+  parentElement,
+  list,
+  position = "afterbegin",
+  clear = false
+) {
+  if (!parentElement || !templateFn || !Array.isArray(list)) return;
+
+  if (clear) {
+    parentElement.innerHTML = "";
+  }
+
+  const htmlStrings = list.map(templateFn);
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
