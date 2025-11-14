@@ -1,38 +1,28 @@
-export function qs(selector, parent = document) {
-  return parent.querySelector(selector);
+export async function loadTemplate(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
+  return await res.text();
 }
 
-export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
+export function renderWithTemplate(template, parentElement, data = null, callback = null) {
+  parentElement.innerHTML = template;
+  if (typeof callback === "function") callback(parentElement, data);
 }
 
-export function setLocalStorage(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
+export async function loadHeaderFooter() {
+  const header = document.getElementById("main-header");
+  const footer = document.getElementById("main-footer");
+  if (!header || !footer) return;
 
-export function setClick(selector, callback) {
-  const element = qs(selector);
-  if (!element) return;
-  element.addEventListener("touchend", (event) => {
-    event.preventDefault();
-    callback(event);
-  });
-  element.addEventListener("click", callback);
-}
+  try {
+    const [headerHTML, footerHTML] = await Promise.all([
+      loadTemplate("/partials/header.html"),
+      loadTemplate("/partials/footer.html")
+    ]);
 
-export function renderListWithTemplate(
-  templateFn,
-  parentElement,
-  list,
-  position = "afterbegin",
-  clear = false
-) {
-  if (!parentElement || !templateFn || !Array.isArray(list)) return;
-
-  if (clear) {
-    parentElement.innerHTML = "";
+    renderWithTemplate(headerHTML, header);
+    renderWithTemplate(footerHTML, footer);
+  } catch (err) {
+    console.error("Error loading header/footer:", err);
   }
-
-  const htmlStrings = list.map(templateFn);
-  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
