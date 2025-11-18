@@ -25,7 +25,9 @@
       }
     ],
     "no-console": 1,
-    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+
+    "quotes": "off",
+
     "func-names": 0,
     "space-unary-ops": 2,
     "space-in-parens": "error",
