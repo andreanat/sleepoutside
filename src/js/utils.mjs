@@ -25,3 +25,11 @@ export function getParam(param) {
   const params = new URLSearchParams(queryString);
   return params.get(param);
 }
+export function renderListWithTemplate(templateFn, parentElement, list) {
+  parentElement.innerHTML = '';
+
+  list.forEach((item) => {
+    const html = templateFn(item);
+    parentElement.insertAdjacentHTML('beforeend', html);
+  });
+}
