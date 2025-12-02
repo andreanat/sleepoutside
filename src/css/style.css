@@ -261,3 +261,9 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+.empty-cart {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-style: italic;
+  opacity: 0.8;
+}
